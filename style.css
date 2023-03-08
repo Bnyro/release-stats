@@ -54,6 +54,7 @@ a:hover {
 
 #input {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin: 1rem 0;
   gap: 1rem;
@@ -76,4 +77,8 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+#results > div * {
+  word-wrap: break-word;
 }
