@@ -3,6 +3,55 @@ let $$ = document.querySelectorAll.bind(document);
 
 const baseUrl = "https://api.github.com";
 
+const filterWords = [
+  "Translation",
+  "dependency",
+  "Bump version",
+  "Merge",
+  "ktlint",
+  "Changelog",
+];
+
+const generateChangelog = async (repo) => {
+  const latestReleaseUrl = `${baseUrl}/repos/${repo}/releases/latest`;
+  const releaseInfoResponse = await fetch(latestReleaseUrl);
+  const releaseInfo = await releaseInfoResponse.json();
+
+  const targetUrl = `${baseUrl}/repos/${repo}/compare/${releaseInfo.tag_name}...${releaseInfo.target_commitish}?per_page=100`;
+
+  const response = await fetch(targetUrl);
+  const json = await response.json();
+
+  if (json.message) {
+    alert(json.message);
+    return;
+  }
+
+  const commits = json.commits;
+  const pages = json.total_commits / 100;
+  let current_page = 1;
+
+  while (current_page < pages) {
+    current_page += 1;
+    const response = await fetch(targetUrl + "&page=" + current_page);
+    const jsonResp = await response.json();
+    commits.push(...jsonResp.commits);
+  }
+
+  const relevantCommits = commits.filter(
+    (commit) =>
+      !filterWords.some((word) =>
+        commit.commit.message.toLowerCase().includes(word.toLowerCase())
+      )
+  );
+
+  const changelog = relevantCommits
+    .map((commit) => `* ${commit.commit.message}`)
+    .join("<br />");
+
+  $("#results").innerHTML = `<div>${changelog}</div>`;
+};
+
 const showReleases = (releases) => {
   releases.forEach((release) => {
     const downloadCount = getDownloadCount(release);
@@ -51,6 +100,15 @@ $("#submit").addEventListener("click", async (event) => {
   event.preventDefault();
   try {
     await fetchReleases($("#repo").value);
+  } catch (e) {
+    alert(e);
+  }
+});
+
+$("#changelog").addEventListener("click", async (event) => {
+  event.preventDefault();
+  try {
+    await generateChangelog($("#repo").value);
   } catch (e) {
     alert(e);
   }
