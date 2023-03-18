@@ -63,8 +63,8 @@ const showReleases = (releases) => {
     const inner = `
             <a href="${release.html_url}">${release.tag_name}</a>
             <span>Downloads: ${downloadCount}</span>
-            <span>Author: <a href="${release.author.html_url}">${
-      release.author.login
+            <span>Author: <a href="${release.author?.html_url}">${
+      release.author?.login
     }</a></span>
             <span>Published on: ${published}</span>
             <span>Total reactions: ${
@@ -98,7 +98,7 @@ const fetchReleases = async (repo) => {
   while (releases.length % itemsPerReleasePage == 0) {
     let page = releases.length / itemsPerReleasePage + 1;
     const response = await fetch(`${releasesUrl}?page=${page}`);
-    releases.push(...await response.json());
+    releases.push(...(await response.json()));
   }
 
   $("#results").innerHTML = "";
