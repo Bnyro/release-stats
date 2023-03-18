@@ -47,6 +47,7 @@ const generateChangelog = async (repo) => {
 
   const changelog = relevantCommits
     .map((commit) => `* ${commit.commit.message}`)
+    .map((message) => message.replace("closes ", ""))
     .join("<br />");
 
   $("#results").innerHTML = `<div>${changelog}</div>`;
