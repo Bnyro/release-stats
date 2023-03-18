@@ -2,6 +2,7 @@ let $ = document.querySelector.bind(document);
 let $$ = document.querySelectorAll.bind(document);
 
 const baseUrl = "https://api.github.com";
+const itemsPerReleasePage = 30;
 
 const filterWords = [
   "Translation",
@@ -88,10 +89,18 @@ const getDownloadCount = (release) => {
 };
 
 const fetchReleases = async (repo) => {
-  const response = await fetch(`${baseUrl}/repos/${repo}/releases`);
+  const releasesUrl = `${baseUrl}/repos/${repo}/releases`;
+  const response = await fetch(releasesUrl);
   if (response.status != 200) throw new Error("Repository not found!");
   const releases = await response.json();
   if (releases.length === 0) throw new Error("No release found!");
+
+  while (releases.length % itemsPerReleasePage == 0) {
+    let page = releases.length / itemsPerReleasePage + 1;
+    const response = await fetch(`${releasesUrl}?page=${page}`);
+    releases.push(...await response.json());
+  }
+
   $("#results").innerHTML = "";
   $("#total").innerHTML = `${getTotalDownloadCount(releases)} total downloads`;
   showReleases(releases);
