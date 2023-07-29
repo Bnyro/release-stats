@@ -3,15 +3,16 @@
 }
 
 :root {
-  --base: #310f32;
-  --surface: #e1567c;
-  --text: #fff;
+  --base: #181818;
+  --accent: #9bd3eb;
+  --foreground: #eee;
   --radius: 1rem;
+  --border-width: 0.2rem;
 }
 
 html {
   background-color: var(--base);
-  color: var(--text);
+  color: var(--foreground);
   font-family: "Courier New", Courier, monospace;
 }
 
@@ -20,32 +21,39 @@ body {
 }
 
 input[type="text"] {
+  background: var(--base);
+  color: var(--accent);
   border-radius: var(--radius);
-  padding: 1rem;
-  border: none;
+  border: var(--border-width) solid var(--accent);
+  padding: 0.9rem 1.5rem;
   outline: none;
-  min-width: 30%;
+  min-width: 20rem;
+}
+
+input[type="text"]::placeholder {
+  opacity: 0.8;
 }
 
 input[type="submit"] {
   border-radius: var(--radius);
   cursor: pointer;
-  background: var(--surface);
-  border: 0.2rem solid var(--surface);
-  padding: 0.5rem 1.5rem;
-  color: var(--text);
+  background: var(--accent);
+  border: var(--border-width) solid var(--accent);
+  padding: 0 1.5rem;
+  line-height: 0.7rem;
+  color: var(--base);
   text-transform: uppercase;
   transition: 200ms all ease-in-out;
 }
 
 input[type="submit"]:hover {
   background-color: transparent;
-  color: var(--surface);
+  color: var(--accent);
 }
 
 a {
   text-decoration: none;
-  color: var(--surface);
+  color: var(--accent);
 }
 
 a:hover {
@@ -57,7 +65,7 @@ a:hover {
   flex-wrap: wrap;
   justify-content: center;
   margin: 1rem 0;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 #total {
@@ -71,7 +79,7 @@ a:hover {
 
 #results > div {
   border-radius: var(--radius);
-  border: var(--text) 0.15rem solid;
+  border: var(--border-width) solid var(--accent);
   padding: 1rem 1.5rem;
   margin: 1rem 0;
   display: flex;
