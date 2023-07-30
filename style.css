@@ -27,7 +27,8 @@ input[type="text"] {
   border: var(--border-width) solid var(--accent);
   padding: 0.9rem 1.5rem;
   outline: none;
-  min-width: 20rem;
+  width: 20rem;
+  max-width: 90%;
 }
 
 input[type="text"]::placeholder {
@@ -39,8 +40,7 @@ input[type="submit"] {
   cursor: pointer;
   background: var(--accent);
   border: var(--border-width) solid var(--accent);
-  padding: 0 1.5rem;
-  line-height: 0.7rem;
+  padding: 0.9rem 1.5rem;
   color: var(--base);
   text-transform: uppercase;
   transition: 200ms all ease-in-out;
