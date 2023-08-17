@@ -13,6 +13,10 @@ const filterWords = [
   "Changelog",
 ];
 
+const onlyUnique = (value, index, array) => {
+  return array.indexOf(value) === index;
+}
+
 const generateChangelog = async (repo) => {
   const latestReleaseUrl = `${baseUrl}/repos/${repo}/releases/latest`;
   const releaseInfoResponse = await fetch(latestReleaseUrl);
@@ -47,8 +51,17 @@ const generateChangelog = async (repo) => {
   );
 
   const changelog = relevantCommits
-    .map((commit) => `* ${commit.commit.message}`)
-    .map((message) => message.replace("closes ", ""))
+    .map((commit) => {
+      const message = commit.commit.message
+        .split('\n')[0]
+        .replace(/(\(closes #\d+\))/mg, "")
+        .replace(/(#\d+)/mg, "")
+        .replace('`', '')
+        .trim();
+      const author = commit.author.login;
+      return `* ${message} by @${author}`;
+    })
+    .filter(onlyUnique)
     .join("<br />");
 
   $("#results").innerHTML = `<div>${changelog}</div>`;
@@ -111,6 +124,7 @@ $("#submit").addEventListener("click", async (event) => {
   try {
     await fetchReleases($("#repo").value);
   } catch (e) {
+    console.error(e);
     alert(e);
   }
 });
@@ -120,6 +134,7 @@ $("#changelog").addEventListener("click", async (event) => {
   try {
     await generateChangelog($("#repo").value);
   } catch (e) {
+    console.error(e);
     alert(e);
   }
 });
