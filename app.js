@@ -54,8 +54,7 @@ const generateChangelog = async (repo) => {
     .map((commit) => {
       const message = commit.commit.message
         .split('\n')[0]
-        .replace(/(\(closes #\d+\))/mg, "")
-        .replace(/(#\d+)/mg, "")
+        .replace(/(\(?(closes)?(see)?\ ?#\d+\)?)/mg, "")
         .replace('`', '')
         .trim();
       const author = commit.author.login;
