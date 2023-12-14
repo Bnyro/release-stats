@@ -57,8 +57,8 @@ const generateChangelog = async (repo) => {
         .replace(/(\(?(closes)?(see)?\ ?#\d+\)?)/mg, "")
         .replace('`', '')
         .trim();
-      const author = commit.author.login;
-      return `* ${message} by @${author}`;
+
+      return `* ${message} by @${commit.author?.login}`;
     })
     .filter(onlyUnique)
     .join("<br />");
